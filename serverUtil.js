@@ -36,14 +36,30 @@ var filesMap = function (filename) {
 
 buildServerFile('./');
 
-serverfiles.forEach(function (file) {
-    filesMap(file);
-    fs.watch(file, function () {
-        filesMap(file);
+serverfiles.forEach(function (filename) {
+    filesMap(filename);
+    fs.watch(filename, function () {
+        filesMap(filename);
     })
 })
 
-var composeHTML = function (outterHTML, innerHTML, targetTag) {
+var updateInclude = function (renderHtml, include) {
+
+}
+
+var replaceTag = function (html) {
+    // The includes is not a Array, so it cannot
+    var renderHtml = util.clone(html);
+    var includes = renderHtml.getElementsByTagName('include');
+    for (var i = 0; i < includes.length; i++) {
+        var include = includes[i];
+        var newHtml = util.clone(htmls['./' + include.getAttribute('ref')].firstChild);
+        renderHtml.replaceChild(newHtml, include);    
+        fs.watch('./' + includes[i].getAttribute('ref'), function () {
+            replaceTag(html);
+        });
+    }
+    return renderHtml;
 }
 
 exports.createHTTPServer = function () {
@@ -53,8 +69,13 @@ exports.createHTTPServer = function () {
             url = '/index.html';
         var html = htmls['.' + url];
         res.writeHeader(200, { "Content-Type": "text/html" });
-        if (html)
-            res.write(html.innerHTML);
+        
+        if(html) {
+            var renderHtml = replaceTag(html);// 這邊使用lib要使用更彈性的方式做變換
+            res.write(renderHtml.toString());
+        }
+        
+            
         res.end();
 
         req.on('data', function (chunk) {
