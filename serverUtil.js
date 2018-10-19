@@ -6,11 +6,10 @@
 
 var http = require('http');
 var fs = require('fs');
-var hp = require('node-html-parser');
+var fileParser = require('./util/fileParserI');
+var util = require('./util/util.js');
 var htmls = {};
 var serverfiles = [];
-// the nav is a global flag to decide wheather compose nav into html or not
-var nav = true;
 
 var buildServerFile = function (path) {
     var files = fs.readdirSync(path);
@@ -24,9 +23,11 @@ var buildServerFile = function (path) {
     })
 }
 
-var filesMap = function (file) {
-    fs.readFile(file, 'utf8', function (err, html) {
-        htmls[file] = hp.parse(html);
+var filesMap = function (filename) {
+    if (!filename.match(/.*\.html/))
+        return;
+    fs.readFile(filename, 'utf8', function (err, html) {
+        htmls[filename] = fileParser.parse(html);
         if (err) {
             throw err;
         }
