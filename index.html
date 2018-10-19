@@ -2,21 +2,54 @@
 
 <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-        crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
 </head>
 
 <body>
-
-    <div id='firstDiv' float="left">
-        1. 本網站是使用Nodejs 的方式架設的網站
+    <include ref='nav.html'></include>
+    <div>
+        <table class='table'>
+            <tr>
+                <th scope="col">序號</th>
+                <th scope="col">內容</th>
+            </tr>
+            <tr>
+                <th scope="row">1</th>
+                <td>本網站是使用Nodejs 及Bootstrap的方式架設的網站</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>伺服器架構</td>
+            </tr>
+            <tr>
+                <th scope="row">a</th>
+                <td>server內的檔案更改, cache直接變更新</td>
+            </tr>
+            <tr>
+                <th scope="row">b</th>
+                <td>html內的檔案可以使用其他tag, 在server內啟用編輯</td>
+            </tr>
+            <tr>
+                <th scope="row">c</th>
+                <td></td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td>預計待做事項</td>
+            </tr>
+            <tr>
+                <th scope="row">a</th>
+                <td>replaceTag需要有cache功能</td>
+            </tr>
+        </table>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-        crossorigin="anonymous"></script>
+
 </body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js">
+</script>
+
 </html>
