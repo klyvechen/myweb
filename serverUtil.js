@@ -43,19 +43,17 @@ serverfiles.forEach(function (filename) {
     })
 })
 
-var updateInclude = function (renderHtml, include) {
-
-}
-
 var replaceTag = function (html) {
     // The includes is not a Array, so it cannot
     var renderHtml = util.clone(html);
     var includes = renderHtml.getElementsByTagName('include');
-    for (var i = 0; i < includes.length; i++) {
-        var include = includes[i];
+    for (; includes.length > 0;) {
+        var include = includes[0];
         var newHtml = util.clone(htmls['./' + include.getAttribute('ref')].firstChild);
+        if (newHtml.getElementsByTagName('include')) 
+            newHtml = replaceTag(newHtml);
         renderHtml.replaceChild(newHtml, include);    
-        fs.watch('./' + includes[i].getAttribute('ref'), function () {
+        fs.watch('./' + include.getAttribute('ref'), function () {
             replaceTag(html);
         });
     }
@@ -71,8 +69,9 @@ exports.createHTTPServer = function () {
         res.writeHeader(200, { "Content-Type": "text/html" });
         
         if(html) {
-            var renderHtml = replaceTag(html);// 這邊使用lib要使用更彈性的方式做變換
-            res.write(renderHtml.toString());
+            if (html.getElementsByTagName('include'))
+                html = replaceTag(html);// 這邊使用lib要使用更彈性的方式做變換
+            res.write(html.toString());
         }
         
             
