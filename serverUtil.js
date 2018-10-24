@@ -43,21 +43,61 @@ serverfiles.forEach(function (filename) {
     })
 })
 
-var replaceTag = function (html) {
+/**
+ * @param {Document} html
+ * @param {Object} elements
+ * @return {Document}
+ */
+var replaceContentTag = function (html, elements) {
+    var contentTags = html.getElementsByTagName('content');
+    for(var j = 0 ;j < elements.length; j++) {
+        html.insertBefore(elements.item(0), contentTags[0]);
+    }
+    if (contentTags[0])
+        html.removeChild(contentTags[0]);
+    return html;
+}
+
+/**
+ * @param {Document} html
+ * @param {Object} elements
+ * @return {Document}
+ */
+var replaceIncludeTag = function (html) {
     // The includes is not a Array, so it cannot
     var renderHtml = util.clone(html);
-    var includes = renderHtml.getElementsByTagName('include');
-    for (; includes.length > 0;) {
-        var include = includes[0];
-        var newHtml = util.clone(htmls['./' + include.getAttribute('ref')].firstChild);
-        if (newHtml.getElementsByTagName('include')) 
-            newHtml = replaceTag(newHtml);
-        renderHtml.replaceChild(newHtml, include);    
-        fs.watch('./' + include.getAttribute('ref'), function () {
-            replaceTag(html);
-        });
+    var includeTags = renderHtml.getElementsByTagName('include');
+    var includeTagsLength = includeTags.length;
+    // In replaceChild will change the length of the includes, so we do until the include go to zero.
+    for (var i = 0; i < includeTagsLength; i++) {
+        var includeTag = includeTags[i];
+        var includeChildren = util.clone(includeTag.childNodes);
+        var includeHtml;
+        if (includeHtml = htmls['./' + includeTag.getAttribute('ref')]) {
+            var renderIncludeHtml = util.clone(includeHtml);
+            //Document, List<Element>
+            replaceContentTag(renderIncludeHtml, includeChildren);
+            //Document
+            renderIncludeHtml = loadHtml(renderIncludeHtml);
+            for (var j = 0; j < renderIncludeHtml.childNodes.length; j++) {
+                renderHtml.insertBefore(renderIncludeHtml.childNodes[j], includeTag);
+            }
+            renderHtml.removeChild(includeTag);
+            fs.watch('./' + includeTag.getAttribute('ref'), function () {
+                replaceIncludeTag(html);
+            });
+        }
     }
     return renderHtml;
+}
+
+/**
+ * @param: Document html
+ * @return: Document
+ */
+var loadHtml = function (html) {
+    if (html.getElementsByTagName('include'))
+        return replaceIncludeTag(html);// 這邊使用lib要使用更彈性的方式做變換
 }
 
 exports.createHTTPServer = function () {
@@ -69,8 +109,7 @@ exports.createHTTPServer = function () {
         res.writeHeader(200, { "Content-Type": "text/html" });
         
         if(html) {
-            if (html.getElementsByTagName('include'))
-                html = replaceTag(html);// 這邊使用lib要使用更彈性的方式做變換
+            html = loadHtml(html);
             res.write(html.toString());
         }
         
