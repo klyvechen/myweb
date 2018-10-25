@@ -6,47 +6,47 @@
 </head>
 
 <body>
-    <include ref='nav.include.html'></include>
-    <div>
-        <table class='table'>
-            <tr>
-                <th scope="col">序號</th>
-                <th scope="col">內容</th>
-            </tr>
-            <tr>
-                <th scope="row">1</th>
-                <td>本網站是使用Nodejs 及Bootstrap的方式架設的網站</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>伺服器架構</td>
-            </tr>
-            <tr>
-                <th scope="row">a</th>
-                <td>server內的檔案更改, cache直接變更新</td>
-            </tr>
-            <tr>
-                <th scope="row">b</th>
-                <td>html內的檔案可以使用其他tag, 在server內啟用編輯</td>
-            </tr>
-            <tr>
-                <th scope="row">c</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>預計待做事項</td>
-            </tr>
-            <tr>
-                <th scope="row">a</th>
-                <td>replaceTag需要有cache功能</td>
-            </tr>
-        </table>
-    </div>
-    <div>
-        The website is speed up by Bootstrap.
-    </div>
-
-    <include ref='script.include.html'></include>
+    <include ref="body.template.html">
+        <div>
+            <table class='table'>
+                <tr>
+                    <th scope="col">序號</th>
+                    <th scope="col">內容</th>
+                </tr>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>本網站是使用Nodejs 及Bootstrap的方式架設的網站</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>伺服器架構</td>
+                </tr>
+                <tr>
+                    <th scope="row">a</th>
+                    <td>server內的檔案更改, cache直接變更新</td>
+                </tr>
+                <tr>
+                    <th scope="row">b</th>
+                    <td>html內的檔案可以使用其他tag, 在server內啟用編輯</td>
+                </tr>
+                <tr>
+                    <th scope="row">c</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>預計待做事項</td>
+                </tr>
+                <tr>
+                    <th scope="row">a</th>
+                    <td>replaceTag需要有cache功能</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            The website is speed up by Bootstrap.
+        </div>
+    </include>
 </body>
+
 </html>

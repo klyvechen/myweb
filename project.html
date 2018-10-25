@@ -8,24 +8,24 @@
 </head>
 
 <body>
-    <include ref='nav.include.html'></include>
-    <div>
-        <table class='table'>
-            <tr>
-                <th scope="col">序號</th>
-                <th scope="col">內容</th>
-            </tr>
-            <tr>
-                <th scope="row">1</th>
-                <td>建立一個 npm 的package, 該package有自己的網頁架構,可以讓使用者快速架設自己的blog</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>做一個以 nodejs 為底層的php伺服器, 讓原本php使用者無痛直接使用php語言在nodejs上:</td>
-            </tr>
-        </table>
-    </div>
-
-    <include ref='script.include.html'></include>
+    <include ref="body.template.html">
+        <div>
+            <table class='table'>
+                <tr>
+                    <th scope="col">序號</th>
+                    <th scope="col">內容</th>
+                </tr>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>建立一個 npm 的package, 該package有自己的網頁架構,可以讓使用者快速架設自己的blog</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>做一個以 nodejs 為底層的php伺服器, 讓原本php使用者無痛直接使用php語言在nodejs上:</td>
+                </tr>
+            </table>
+        </div>
+    </include>
 </body>
+
 </html>
