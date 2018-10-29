@@ -22,9 +22,22 @@ var lodash = require('lodash');
 //     return tgt;
 // }
 
+// The first extending util method. It is much easier to read.
+var CoupleUtil = function () {
+    this.clone = function (src) {
+        return lodash.cloneDeep(src);
+    }
+};
+util.inherits(CoupleUtil, util.constructor);
+
+module.exports = new CoupleUtil();
+
+//The second extending util method.
+/*
+exports = util;
+
 exports.clone = function (src) {
     // return iterateClone(src, {});
     return lodash.cloneDeep(src);
 }
-
-exports = util;
+*/
