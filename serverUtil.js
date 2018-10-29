@@ -9,8 +9,30 @@ var fs = require('fs');
 var fileParser = require('./util/fileParserI');
 var util = require('./util/util.js');
 var htmls = {};
+var renderHtmls = {};
 var serverfiles = [];
+var events = require('events');
+var EventEmitter = events.EventEmitter;
+var phaseController = {};
 
+//build phase cycle
+(function () {
+    var PhaseController = function () {
+        EventEmitter.call(this);
+        this.phases = {}
+        this.runPhase = function () {
+            this.emit.apply(this, arguments);
+        }
+        this.registerPhase = function (phaseName, callback) {
+            this.on(phaseName, callback);
+        }
+    };
+    util.inherits(PhaseController, EventEmitter);
+    phaseController = new PhaseController();
+})()
+
+// build a hashmap for store the html page(all the html page are view)
+phaseController.registerPhase('buildFiles', function () {
 var buildServerFile = function (path) {
     var files = fs.readdirSync(path);
     files.forEach(function (fp) {
@@ -42,7 +64,9 @@ serverfiles.forEach(function (filename) {
         filesMap(filename);
     })
 })
+});
 
+phaseController.registerPhase('composeFiles', function (req, res) {
 /**
  * @param {Document} html
  * @param {Object} elements
@@ -100,28 +124,39 @@ var loadHtml = function (html) {
         return replaceIncludeTag(html);// 這邊使用lib要使用更彈性的方式做變換
 }
 
-exports.createHTTPServer = function () {
-    return http.createServer(function (req, res) {
-        var url = req.url;
-        if (url == '/')
-            url = '/index.html';
-        var html = htmls['.' + url];
-        res.writeHeader(200, { "Content-Type": "text/html" });
-        
-        if(html) {
-            html = loadHtml(html);
-            res.write(html.toString());
-        }
-        
-            
-        res.end();
+var url = req.url;
+if (url == '/')
+    url = '/index.html';
+var html = htmls['.' + url];
+res.writeHeader(200, { "Content-Type": "text/html" });
+
+if(html) {
+    html = loadHtml(html);
+    res.write(html.toString());
+}
+});
+
+phaseController.registerPhase('initModel',function (initModel){
+    initModel();
+})
+
+phaseController.runPhase('buildFiles');
+exports.createHTTPServer = function (c) {
+    return http.createServer(function (req, res) {       
+        phaseController.runPhase('composeFiles', req, res);
+        phaseController.runPhase('initModel', c.initModel);           
+        phaseController.runPhase('end', req, res);
 
         req.on('data', function (chunk) {
             console.log('parsed', chunk);
         })
         req.on('end', function () {
-            console.log('done parsing');
+            console.log('done');
             res.end();
         });
-    })
+    });
 };
+
+exports.getPhaseController = function () {
+    return phaseController;
+}
